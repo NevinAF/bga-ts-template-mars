@@ -4,30 +4,17 @@
   "description": "",
   "main": "tstemplateexamples.js",
   "scripts": {
-    "build:ts": "tsc",
-    "watch:ts": "tsc --watch",
-    "build:scss": "sass --no-source-map src/css/GameXBody.scss tstemplateexamples.css",
-    "watch:scss": "sass --watch  src/css/GameXBody.scss tstemplateexamples.css",
-    "watch": "npm run watch:ts && npm run watch:scss",
-    "build": "npm run build:ts && npm run build:scss",
+    "init": "npm install bga-ts-template && npx bga-init TSTemplateExamples \"VictoriaLa, NevinAF\" src --typescript",
+    "build": "npx bga-build",
+    "watch": "npx bga-build --watch",
     "test": "cd modules; APP_GAMEMODULE_PATH=~/git/bga-sharedcode/misc/ phpunit --bootstrap ./_autoload.php --colors=always tests",
     "predeploy": "cd modules; APP_GAMEMODULE_PATH=~/git/bga-sharedcode/misc/ php7.4 _testpredeploy.php",
     "build:material": "php7.4 ./misc/other/genmat.php misc/*.csv"
   },
   "author": "VictoriaLa",
   "license": "EPL2.0",
-  "devDependencies": {
-    "@prettier/plugin-php": "^0.19.1",
-    "prettier": "^3.0.3",
-    "sass": "^1.32.6",
-    "typescript": "^4.1.3"
-  },
-  "prettier": {
-    "braceStyle": "1tbs",
-    "printWidth": 140,
-    "trailingComma": "none"
-  },
   "dependencies": {
-    "tsc": "^2.0.4"
+    "bga-ts-template": "^1.1.5",
+    "sass": "^1.75.0"
   }
 }
