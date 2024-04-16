@@ -1,11 +1,15 @@
-enum View {
+import { LocalSettings } from "./LocalSettings";
+
+export enum View {
   Hidden = 0,
   Synthetic = 1,
   Stacked = 2,
   Full = 3
 }
 
-class CardStack {
+declare function $(text: string | Element): HTMLElement;
+
+export class CardStack {
   //set props
   tableau_id: string; // id of card stack
   div_id: string;

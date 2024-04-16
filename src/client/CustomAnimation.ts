@@ -1,4 +1,6 @@
-class CustomAnimation {
+import { CustomRenders } from "./CustomRenders";
+
+export class CustomAnimation {
   private animations = {};
   private slide_duration:number=800;
 

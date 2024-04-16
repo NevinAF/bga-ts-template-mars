@@ -1,13 +1,17 @@
+import { GameBasics, getParentParts, getPart } from "./GameBasics";
+
+declare function $(text: string | Element): HTMLElement;
+
 /**
  * Interface that mimics token datatabase object
  */
-interface Token {
+export interface Token {
   key: string;
   location: string;
   state: number;
 }
 
-interface TokenDisplayInfo {
+export interface TokenDisplayInfo {
   key: string; // token id
   tokenId: string; // original id of html node
   typeKey: string; // this is key in token_types structure
@@ -20,7 +24,7 @@ interface TokenDisplayInfo {
   [key: string]: any;
 }
 
-interface TokenMoveInfo extends Token {
+export interface TokenMoveInfo extends Token {
   x?: number;
   y?: number;
   position?: string;
@@ -32,7 +36,7 @@ interface TokenMoveInfo extends Token {
   from?: string;
 }
 
-class GameTokens extends GameBasics {
+export class GameTokens extends GameBasics {
   restoreList: string[];
   player_color: string;
   clientStateArgs: any;
@@ -455,10 +459,10 @@ class GameTokens extends GameBasics {
 
   handleStackedTooltips(attachNode: HTMLElement) {}
 
-  removeTooltip(nodeId: string): void {
+  removeTooltip = function(this: GameTokens, nodeId: string): void {
     // if (this.tooltips[nodeId])
     //     console.log('removing tooltip for ',nodeId);
-    this.inherited(arguments);
+    GameBasics.prototype.removeTooltip.call(this, nodeId);
     this.tooltips[nodeId] = null;
   }
 
@@ -566,7 +570,7 @@ class GameTokens extends GameBasics {
   }
 
   /** @Override */
-  format_string_recursive(log: string, args: any) {
+  format_string_recursive = function(this: GameTokens, log: string, args: any) {
     try {
       if (args.log_others !== undefined && this.player_id != args.player_id) {
         log = args.log_others;
@@ -607,7 +611,7 @@ class GameTokens extends GameBasics {
     } catch (e) {
       console.error(log, args, "Exception thrown", e.stack);
     }
-    return this.inherited(arguments);
+    return GameBasics.prototype.format_string_recursive.call(this, log, args);
   }
 
   /**
@@ -618,7 +622,7 @@ class GameTokens extends GameBasics {
    * @param onToken - onToken handler
    * @param args - args passes to setClientState
    */
-  setClientStateUpdOn(name: string, onUpdate: (args: any) => void, onToken: (id: string) => void, args?: any) {
+  setClientStateUpdOn(name: GameStateName, onUpdate: (args: any) => void, onToken: (id: string) => void, args?: any) {
     this[`onUpdateActionButtons_${name}`] = onUpdate;
     if (onToken) this[`onToken_${name}`] = onToken;
     setTimeout(() => this.setClientState(name, args), 1);

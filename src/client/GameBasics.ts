@@ -1,15 +1,13 @@
-// @ts-ignore
-GameGui = /** @class */ (function () {
-  function GameGui() {}
-  return GameGui;
-})();
+import GameGui = require("ebg/core/gamegui");
+
+declare function $(text: string | Element): HTMLElement;
 
 /**
  * Class that extends default bga core game class with more functionality
  * Contains generally usefull features such as animation, additional utils, etc
  */
 
-class GameBasics extends GameGui {
+export class GameBasics extends GameGui {
   laststate: string | undefined;
   pendingUpdate: boolean;
   currentPlayerWasActive: boolean;
@@ -41,7 +39,7 @@ class GameBasics extends GameGui {
     var parent = document.querySelector(".debug_section");
     if (parent && !$("reloadcss")) {
       var butt = dojo.create("a", { id: "reloadcss", class: "bgabutton bgabutton_gray", innerHTML: "Reload CSS" }, parent);
-      dojo.connect(butt, "onclick", () => reloadCss());
+      dojo.connect(butt, "onclick", this, () => reloadCss());
     }
     this.setupNotifications();
     this.upldateColorMapping(".player-name *");
@@ -210,7 +208,7 @@ class GameBasics extends GameGui {
   /**
    * This method will remove all inline style added to element that affect positioning
    */
-  stripPosition(token) {
+  stripPosition(token: ElementOrId) {
     // console.log(token + " STRIPPING");
     // remove any added positioning style
     token = $(token);
@@ -226,7 +224,7 @@ class GameBasics extends GameGui {
   attachToNewParentNoDestroy(
     mobile_in: ElementOrId,
     new_parent_in: ElementOrId,
-    relation?: string,
+    relation?: number | dojo.PosString,
     mobileStyle?: any
   ): { top: number; left: number } {
     //console.log("attaching ",mobile,new_parent,relation);
@@ -277,7 +275,7 @@ class GameBasics extends GameGui {
     duration?: number,
     delay?: number,
     onEnd?: (node: Element) => void,
-    relation?: string,
+    relation?: number | dojo.PosString,
     mobileStyle?: StringProperties
   ): void {
     const mobileNode = $(tokenId) as HTMLElement;
@@ -319,7 +317,7 @@ class GameBasics extends GameGui {
     duration?: number,
     delay?: number,
     onEnd?: (node: Element) => void,
-    relation?: string,
+    relation?: number | dojo.PosString,
     mobileStyle?: StringProperties
   ): void {
     const mobileNode = $(tokenId);
@@ -603,11 +601,11 @@ class GameBasics extends GameGui {
     );
   }
 
-  setDescriptionOnMyTurn(text: string, moreargs?: []) {
+  setDescriptionOnMyTurn(text: string, moreargs?: any) {
     this.gamedatas.gamestate.descriptionmyturn = text;
     // this.updatePageTitle();
     //console.log('in',   this.gamedatas.gamestate.args, moreargs);
-    var tpl = dojo.clone(this.gamedatas.gamestate.args);
+    var tpl = dojo.clone(this.gamedatas.gamestate.args) as Record<string, any>;
 
     if (!tpl) {
       tpl = {};
@@ -679,18 +677,18 @@ class GameBasics extends GameGui {
     }
   }
 
-  connectClickTemp(node: Element, handler: eventhandler) {
+  connectClickTemp(node: HTMLElement, handler: eventhandler) {
     node.classList.add(this.classActiveSlot, "temp_click_handler");
     this.connect(node, "click", handler);
   }
 
   connectAllTemp(query: string, handler: eventhandler) {
     document.querySelectorAll(query).forEach((node) => {
-      this.connectClickTemp(node, handler);
+      this.connectClickTemp(node as HTMLElement, handler);
     });
   }
 
-  disconnectClickTemp(node: Element) {
+  disconnectClickTemp(node: HTMLElement) {
     node.classList.remove(this.classActiveSlot, "temp_click_handler");
     this.disconnect(node, "click");
   }
@@ -699,7 +697,7 @@ class GameBasics extends GameGui {
     if (!query) query = ".temp_click_handler";
     document.querySelectorAll(query).forEach((node) => {
       //console.log("disconnecting => " + node.id);
-      this.disconnectClickTemp(node);
+      this.disconnectClickTemp(node as HTMLElement);
     });
   }
 
@@ -735,7 +733,7 @@ class GameBasics extends GameGui {
    * @param onUpdate - handler
    * @param args - args passes to setClientState
    */
-  setClientStateUpd(name: string, onUpdate: (args: any) => void, args?: any) {
+  setClientStateUpd(name: GameStateName, onUpdate: (args: any) => void, args?: any) {
     this[`onUpdateActionButtons_${name}`] = onUpdate;
     setTimeout(() => this.setClientState(name, args), 1);
   }
@@ -746,7 +744,7 @@ class GameBasics extends GameGui {
   }
 
   /** @Override onScriptError from gameui */
-  onScriptError(msg, url, linenumber) {
+  onScriptError = function(msg, url, linenumber) {
     if (gameui.page_is_unloading) {
       // Don't report errors during page unloading
       return;
@@ -755,7 +753,7 @@ class GameBasics extends GameGui {
     console.error(msg);
     // cannot call super - dojo still have to used here
     //super.onScriptError(msg, url, linenumber);
-    return this.inherited(arguments);
+    return GameGui.prototype.onScriptError.call(this, msg, url, linenumber);
   }
 
   showError(log: string, args?: any) {
@@ -875,9 +873,9 @@ class GameBasics extends GameGui {
     this.addActionButton("button_cancel", name, handler, null, false, "red");
   }
 
-  addActionButton(id: string, label: string, method: string | eventhandler, destination?: ElementOrId, blinking?: boolean, color?: string) {
+  addActionButton = function(this: GameBasics, id: string, label: string, method: string | eventhandler, destination?: ElementOrId, blinking?: boolean, color?: string) {
     if ($(id)) dojo.destroy(id);
-    this.inherited(arguments);
+    GameGui.prototype.addActionButton.apply(this, arguments);
     return $(id);
   }
 
@@ -903,8 +901,8 @@ class GameBasics extends GameGui {
   }
 
   /* @Override */
-  updatePlayerOrdering() {
-    this.inherited(arguments);
+  updatePlayerOrdering = function(this: GameBasics) {
+    GameGui.prototype.updatePlayerOrdering.apply(this);
     dojo.place("player_board_config", "player_boards", "first");
   }
 
@@ -934,7 +932,7 @@ class GameBasics extends GameGui {
           // remove the class because otherwise framework will hook its own listener there
           parent.querySelectorAll(".game_preference_control").forEach((node) => dojo.removeClass(node, "game_preference_control"));
           if (this.refaceUserPreference(index, parent as Element, prefDivId) == false)
-            dojo.connect(parent, "onchange", (e: any) => this.onChangePreferenceCustom(e));
+            dojo.connect(parent, "onchange", this, (e: any) => this.onChangePreferenceCustom(e));
         }
       }
     }
@@ -1018,7 +1016,7 @@ class GameBasics extends GameGui {
     this.showPopin(html, "log_info", "Game Info for bug report");
   }
 
-  showPopin(html: string,  id = "mr_dialog", title: string = undefined) {
+  showPopin(html: string | Node,  id = "mr_dialog", title: string = undefined) {
     const dialog = new ebg.popindialog();
     dialog.create(id);
     if (title) dialog.setTitle(title);
@@ -1062,7 +1060,8 @@ class GameBasics extends GameGui {
       {
         id: pref_id,
         value: value,
-        game: this.game_name
+        game: this.game_name,
+		lock: false
       },
       this,
       function (result) {
@@ -1103,7 +1102,7 @@ class GameBasics extends GameGui {
 
     // Hacking BGA framework
     if (dojo.hasClass("ebd-body", "mobile_version")) {
-      dojo.query(".player-board").forEach((elt) => {
+      dojo.query<HTMLElement>(".player-board").forEach((elt) => {
         if (elt.style.height != "auto") {
           dojo.style(elt, "min-height", elt.style.height);
           elt.style.height = "auto";
@@ -1218,20 +1217,15 @@ class GameBasics extends GameGui {
     return zoom;
   }
 
-  onScreenWidthChange() {
-    // override
-    //this.zoom = this.doSetZoom(this.zoom);
-  }
-
   setupInfoPanel() {
     //dojo.place('player_board_config', 'player_boards', 'first');
 
-    dojo.connect($("show-settings"), "onclick", () => this.toggleSettings());
+    dojo.connect($("show-settings"), "onclick", this, () => this.toggleSettings());
     this.addTooltip("show-settings", "", _("Display game preferences"));
 
     let chk = $("help-mode-switch");
     dojo.setAttr(chk, "bchecked", false);
-    dojo.connect(chk, "onclick", () => {
+    dojo.connect(chk, "onclick", this, () => {
       console.log("on check", chk);
       const bchecked = !chk.getAttribute("bchecked");
       //dojo.setAttr(chk, "bchecked", !chk.bchecked);
@@ -1380,9 +1374,9 @@ class GameBasics extends GameGui {
   //   return this.inherited(arguments);
   // }
 
-  onLockInterface(lock) {
+  onLockInterface = function(this: GameBasics, lock) {
     $("gameaction_status_wrap").setAttribute("data-interface-status", lock?.status ?? "updated");
-    this.inherited(arguments);
+    GameGui.prototype.onLockInterface.apply(this, arguments);
     // if (lock.status == "queued") {
     //    // do not hide the buttons when locking call comes from another player
     // }
@@ -1488,11 +1482,11 @@ class GameBasics extends GameGui {
   			* [Undocumented] Override BGA framework functions to call onLoadingLogsComplete when loading is done
                         @Override
    			*/
-  setLoader(image_progress: number, logs_progress: number) {
+  setLoader = function(this: GameBasics, image_progress: number, logs_progress: number) {
     if (typeof g_replayFrom != "undefined" && image_progress >= 8) {
       dojo.style("loader_mask", "display", "none");
     }
-    this.inherited(arguments); // required, this is "super()" call, do not remove
+    GameGui.prototype.setLoader.apply(this, arguments); // required, this is "super()" call, do not remove
     //console.log("loader", image_progress, logs_progress)
     if (!this.isLoadingLogsComplete && logs_progress >= 100) {
       this.isLoadingLogsComplete = true; // this is to prevent from calling this more then once
@@ -1508,18 +1502,18 @@ class GameBasics extends GameGui {
   }
 }
 
-function joinId(first, second) {
+export function joinId(first, second) {
   return first + "_" + second;
 }
-function getIntPart(word, i) {
+export function getIntPart(word, i) {
   var arr = word.split("_");
   return parseInt(arr[i]);
 }
-function getPart(word, i) {
+export function getPart(word, i) {
   var arr = word.split("_");
   return arr[i];
 }
-function getFirstParts(word, count) {
+export function getFirstParts(word, count) {
   var arr = word.split("_");
   var res = arr[0];
   for (var i = 1; i < arr.length && i < count; i++) {
@@ -1527,13 +1521,13 @@ function getFirstParts(word, count) {
   }
   return res;
 }
-function getParentParts(word) {
+export function getParentParts(word) {
   var arr = word.split("_");
   if (arr.length <= 1) return "";
   return getFirstParts(word, arr.length - 1);
 }
 
-function reloadCss() {
+export function reloadCss() {
   var links = document.getElementsByTagName("link");
   for (var cl in links) {
     var link = links[cl];
@@ -1551,7 +1545,7 @@ function reloadCss() {
   }
 }
 
-function setStyleAttributes(element: HTMLElement, attrs: { [key: string]: string }): void {
+export function setStyleAttributes(element: HTMLElement, attrs: { [key: string]: string }): void {
   if (attrs !== undefined) {
     Object.keys(attrs).forEach((key: string) => {
       element.style.setProperty(key, attrs[key]);

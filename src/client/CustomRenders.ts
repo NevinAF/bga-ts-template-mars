@@ -2,7 +2,7 @@
 /* Module for rendering  card effects, powers , etc
 *
 */
- class CustomRenders {
+export class CustomRenders {
     public static parses = {
       forest: { classes: "tracker tracker_forest" },
       all_city: { classes: "tracker tracker_city", redborder: 'hex' },

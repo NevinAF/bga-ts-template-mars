@@ -13,7 +13,10 @@ interface LocalProp {
   ui?: "slider" | "checkbox" | undefined | null | false;
 }
 
-class LocalSettings {
+declare function $(text: string | Element): HTMLElement;
+
+
+export class LocalSettings {
   constructor(
     private gameName: string,
     private props: LocalProp[] = []

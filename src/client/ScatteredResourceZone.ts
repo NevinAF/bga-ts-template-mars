@@ -1,9 +1,13 @@
+import { TokenMoveInfo } from "./GameTokens";
+
+declare function $(text: string | Element): HTMLElement;
+
 /**
  * This represents ui zone that containers resource token usually randomly scattered
  * This normally can be represented by resouce count alone but doing the visual effect for shits and giggles
  */
 
-class ScatteredResourceZone {
+export class ScatteredResourceZone {
   value: number; // how many resources to display
   zoneId: string; // id of div holding resources
   resclass: string; //  class/prefix of resource (has to be both prefix of id and class set with same name)

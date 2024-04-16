@@ -1,7 +1,17 @@
 const LAYOUT_PREF_ID = 100;
 const MA_PREF_CONFIRM_TURN = 101;
 
-class GameXBody extends GameTokens {
+declare function $(text: string | Element): HTMLElement;
+
+import { CardStack, View } from "./CardStack";
+import { CustomAnimation } from "./CustomAnimation";
+import { CustomRenders } from "./CustomRenders";
+import { getPart, reloadCss } from "./GameBasics";
+import { GameTokens, Token, TokenDisplayInfo, TokenMoveInfo } from "./GameTokens";
+import { LocalSettings } from "./LocalSettings";
+import { VLayout } from "./VLayout";
+
+export class GameXBody extends GameTokens {
   private reverseIdLookup: Map<String, any>;
   private custom_pay: any;
   private isDoingSetup: boolean;
@@ -15,7 +25,7 @@ class GameXBody extends GameTokens {
   public readonly productionTrackers = ["pm", "ps", "pu", "pp", "pe", "ph"];
   public readonly resourceTrackers = ["m", "s", "u", "p", "e", "h"];
   //score cache
-  private cachedScoreMoveNbr: string = "0";
+  private cachedScoreMoveNbr: number = 0;
   private cachedScoringTable: any;
   // private parses:any;
   private currentOperation: any = {}; // bag of data to support operation engine
@@ -365,7 +375,7 @@ class GameXBody extends GameTokens {
       this.showGameScoringDialog();
     } else {
       let url = `/${this.game_name}/${this.game_name}/getRollingVp.html`;
-      this.ajaxcall(url, [], this, (result) => {
+      this.ajaxcall(url, { lock: false }, this, (result) => {
         this.cachedScoringTable = result.data.contents;
         this.cachedScoreMoveNbr = move;
         this.showGameScoringDialog();
@@ -735,8 +745,8 @@ class GameXBody extends GameTokens {
   //   console.log(html);
   // }
 
-  addMoveToLog(log_id: number, move_id) {
-    this.inherited(arguments);
+  addMoveToLog = function(this: GameXBody, log_id: number, move_id) {
+    GameTokens.prototype.addMoveToLog.call(this, log_id, move_id);
     if (this.prevLogId + 1 < log_id) {
        // we skip over some logs, but we need to look at them also
        for (let i = this.prevLogId + 1; i < log_id; i++) {
@@ -791,7 +801,7 @@ class GameXBody extends GameTokens {
     $(`allcards_prelude_title`).innerHTML = _("All Prelude Cards") + ` (${cc_prelude})`;
 
     // clicks
-    dojo.query(".expandablecontent_cards > *").connect("onclick", this, (event) => {
+    dojo.query(".expandablecontent_cards > *").connect("onclick", this, (event: any) => {
       var id = event.currentTarget.id;
       this.showHelp(id, true);
     });
@@ -896,9 +906,9 @@ class GameXBody extends GameTokens {
     return dlg;
   }
 
-  onScreenWidthChange() {
+  onScreenWidthChange = function(this: GameXBody) {
     if (this.isLayoutFull()) {
-      super.onScreenWidthChange();
+      GameTokens.prototype.onScreenWidthChange.call(this);
     } else {
       const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
       const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -3021,7 +3031,7 @@ awarded.`);
   saveLocalManualOrder(containerNode: HTMLElement) {
     let svOrder: string = "";
     //query should return in the same order as the DOM
-    dojo.query("#" + containerNode.id + " .card").forEach((card) => {
+    dojo.query<HTMLElement>("#" + containerNode.id + " .card").forEach((card) => {
       svOrder += card.id + ",";
     });
     svOrder = svOrder.substring(0, svOrder.length - 1);

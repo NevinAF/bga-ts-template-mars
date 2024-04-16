@@ -1,4 +1,11 @@
-class VLayout {
+import { getPart } from "./GameBasics";
+import { TokenDisplayInfo } from "./GameTokens";
+import { ScatteredResourceZone } from "./ScatteredResourceZone";
+
+declare function $(text: string | Element): HTMLElement;
+
+
+export class VLayout {
   constructor(public game: GameXBody) {}
 
   setupPlayer(playerInfo: any) {
