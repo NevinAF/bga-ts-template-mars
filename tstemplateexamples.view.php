@@ -27,11 +27,11 @@
 
 require_once(APP_BASE_PATH . "view/common/game.view.php");
 
-class view_terraformingmars_terraformingmars extends game_view
+class view_tstemplateexamples_tstemplateexamples extends game_view
 {
   function getGameName()
   {
-    return "terraformingmars";
+    return "tstemplateexamples";
   }
 
   function getTemplateName()

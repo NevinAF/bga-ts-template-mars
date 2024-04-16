@@ -18,14 +18,14 @@
 
 require_once "modules/PGameXBody.php";
 
-class terraformingmars extends PGameXBody {
+class tstemplateexamples extends PGameXBody {
     function __construct() {
         parent::__construct();
     }
 
     protected function getGameName() {
         // Used for translations and stuff. Please do not modify.
-        return "terraformingmars";
+        return "tstemplateexamples";
     }
 
     /*

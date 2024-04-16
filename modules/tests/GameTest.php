@@ -8,7 +8,7 @@ use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertTrue;
 
-require_once "../terraformingmars.game.php";
+require_once "../tstemplateexamples.game.php";
 require_once "TokensInMem.php";
 
 
@@ -18,7 +18,7 @@ class GameStateInMem extends GameState {
 define("PCOLOR", "ff0000");
 define("BCOLOR", "0000ff");
 
-class GameUT extends terraformingmars {
+class GameUT extends tstemplateexamples {
     var $multimachine;
     var $xtable;
     function __construct() {

@@ -5,5 +5,5 @@ define([
   "ebg/core/gamegui",
   "ebg/counter"
 ], function (dojo, declare) {
-  declare("bgagame.terraformingmars", ebg.core.gamegui, new GameXBody());
+  declare("bgagame.tstemplateexamples", ebg.core.gamegui, new GameXBody());
 });

@@ -1,4 +1,4 @@
-# bga.terraformingmars
+# bga.tstemplateexamples
 Bga project for tm game
 Only usable when you develop games for https://boardgamearena.com
 
@@ -39,6 +39,6 @@ Structures of project:
 * misc/*.csv - csv files for material, need to run php script on it to inject in material file
 
 The following files are GENERATED
-terraformingmars.js - main game file generated from typescript from src dir
-terraformingmars.css - generated from scss files
+tstemplateexamples.js - main game file generated from typescript from src dir
+tstemplateexamples.css - generated from scss files
 material.inc.php - content generated from csv files in misc directory

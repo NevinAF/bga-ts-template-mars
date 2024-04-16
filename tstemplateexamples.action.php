@@ -21,14 +21,14 @@
  * this.ajaxcall( "/game/game/myAction.html", ...)
  *
  */
-class action_terraformingmars extends APP_GameAction {
+class action_tstemplateexamples extends APP_GameAction {
     // Constructor: please do not modify
     public function __default() {
         if (self::isArg("notifwindow")) {
             $this->view = "common_notifwindow";
             $this->viewArgs["table"] = self::getArg("table", AT_posint, true);
         } else {
-            $this->view = "terraformingmars_terraformingmars";
+            $this->view = "tstemplateexamples_tstemplateexamples";
             self::trace("Complete reinitialization of board game");
         }
     }

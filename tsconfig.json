@@ -5,7 +5,7 @@
     "module": "none",
     "lib": ["dom", "esnext"],
     "sourceMap": false,
-    "outFile": "terraformingmars.js",
+    "outFile": "tstemplateexamples.js",
     "typeRoots": ["src/types", "./types", "./node_modules/@types"]
   },
 
