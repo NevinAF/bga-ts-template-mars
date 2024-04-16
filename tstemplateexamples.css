@@ -1,4 +1,13 @@
 @charset "UTF-8";
+/*
+ *------
+ * BGA framework: Gregory Isabelli & Emmanuel Colin & BoardGameArena
+ * TSTemplateExamples implementation : © VictoriaLa, NevinAF
+ *
+ * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
+ * See http://en.boardgamearena.com/#!doc/Studio for more information.
+ * -----
+ */
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
@@ -10566,7 +10575,7 @@ html[lang=ar].mcompact #ebd-body.mobile_portrait .award_label {
 .expandable {
   border-radius: 10px;
   box-shadow: 0px 0px 4px 0px #555;
-  background-color: hsla(27deg, 28.6%, 13.7%, 0.11);
+  background-color: hsla(27, 28.6%, 13.7%, 0.11);
 }
 
 /*Sort*/

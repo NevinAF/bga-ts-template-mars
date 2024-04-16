@@ -4,7 +4,7 @@
   "description": "",
   "main": "tstemplateexamples.js",
   "scripts": {
-    "init": "npm install bga-ts-template && npx bga-init TSTemplateExamples \"VictoriaLa, NevinAF\" src --typescript",
+    "init": "npm install bga-ts-template && npx bga-init TSTemplateExamples \"VictoriaLa, NevinAF\" src --typescript --scss",
     "build": "npx bga-build",
     "watch": "npx bga-build --watch",
     "test": "cd modules; APP_GAMEMODULE_PATH=~/git/bga-sharedcode/misc/ phpunit --bootstrap ./_autoload.php --colors=always tests",
